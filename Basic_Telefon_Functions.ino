@@ -4,11 +4,11 @@
 
 float vers = 1.0;
 
-SoftwareSerial mySoftwareSerial(5, 6); // RX, TX
+SoftwareSerial mySoftwareSerial(6, 5); // RX, TX
 DFRobotDFPlayerMini myDFPlayer;
 
-const int Itel1 = 2;    // Telefon 1 Auswertung Gabel und Wählpulse
-const int OAudio = 4; // Signalausgabe auf die unbeschaltenen Telefone (nicht, wenn auf internen AB Leitungen)
+const int Itel1 = 4;    // Telefon 1 Auswertung Gabel und Wählpulse
+const int OAudio = 2; // Signalausgabe auf die unbeschaltenen Telefone (nicht, wenn auf internen AB Leitungen)
 
 bool forkup = false; //ist die Gabel abgehoben
 bool last_forkstate = HIGH; // letzter Zustand der Gabel
@@ -25,7 +25,7 @@ int pause_max = pause*1.1; //ms
 int period_max = 10* (pulse_max + pause_max);
 
 //DF Player Settings
-int df_vol = 10;
+int df_vol = 30;
 
 unsigned long lastchange = 0; //last time fork changed
 
@@ -51,17 +51,26 @@ void setup() {
     Serial.println(F("Unable to begin:"));
     Serial.println(F("1.Please recheck the connection!"));
     Serial.println(F("2.Please insert the SD card!"));
-    while(true);
+    while(true){
+      delay(0); // Code to compatible with ESP8266 watch dog.
+    }
   }
   Serial.println(F("DFPlayer Mini online."));
-  
-  myDFPlayer.setTimeOut(500); //Set serial communictaion time out 500ms
+
+  myDFPlayer.outputDevice(DFPLAYER_DEVICE_U_DISK);
   myDFPlayer.volume(df_vol);
   myDFPlayer.EQ(DFPLAYER_EQ_NORMAL);
-
+  
   pinMode(Itel1, INPUT);
+
 }
 
+void led_blink(){
+  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(500);                       // wait for a second
+  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+  delay(500);                       // wait for a second
+}
 
 void forkstatechange(bool state){
   // Alle vorgängigen Aktionen sind abgeschlossen. Also wird die Gabel neu abgehoben.
@@ -77,8 +86,8 @@ void forkstatechange(bool state){
     
     // Alle vorgängigen Aktionen waren beendet, entweder ist es der erste Wählimpuls oder es wurde aufgelegt
     if (state == HIGH && action_completed == true){
-      // DF Player reset - entweder will jemand einen neuen Track oder hat aufgehängt.
-      myDFPlayer.reset();
+      // DF Player pausieren - entweder will jemand einen neuen Track oder hat aufgehängt.
+      myDFPlayer.pause();
       // Falls ein Signalton ausgegeben wurde, beenden
       noTone(OAudio);
       lastchange = millis();
@@ -117,8 +126,10 @@ void check_action(){
     Serial.println("Hörer aufgelegt");
   }
   else{
+    // mfPlayer braucht Zahlen von 1 bis 10 also wird 0 die zehn.
+    myDFPlayer.play(dial_counter);
     if(dial_counter==10){dial_counter=0;}
-    play_sound(dial_counter);
+
     Serial.print("Nummer: ");
     Serial.println(dial_counter);
     dial_counter = 0;
