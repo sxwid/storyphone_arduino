@@ -17,3 +17,7 @@ Code und Hardware für ein Arduino Shield. Funktionen und Details:
 !!! Funktioniert bei mir nur mit einem Original Arduino (mit Klon bei Speisung über VIN erst nach manuellem Drücken des Reset Buttons).
 
 ![](https://github.com/sxwid/storyphone/blob/master/M%C3%A4rchentelefon.svg.png)
+
+Hier noch das Schema für die Autophon Geräte
+
+![](https://raw.githubusercontent.com/sxwid/storyphone/master/autophon.png)
