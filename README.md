@@ -21,3 +21,11 @@ Code und Hardware für ein Arduino Shield. Funktionen und Details:
 Hier noch das Schema für die Autophon Geräte
 
 ![](https://raw.githubusercontent.com/sxwid/storyphone/master/autophon.png)
+
+Bei Standardkabelbelegung gilt:
+- a Draht weiss (a)
+- b Draht blau (b) 
+- c Draht türkis (Wecker)
+- d Draht violett
+
+Da wir den Wecker nicht benötigen können der weisse und der blaue Draht verwendet werden.
