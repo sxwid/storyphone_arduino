@@ -1,4 +1,4 @@
-# storyphone
+# storyphone Arduino Shield
 Wählscheibentelefon MP3 Player
 
 Code und Hardware für ein Arduino Shield. Funktionen und Details:
